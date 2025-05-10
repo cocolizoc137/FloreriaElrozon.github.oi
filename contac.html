@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de Satisfacción</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+    <header>
+        <h1>Encuesta de Satisfacción</h1>
+    </header>
+    <main>
+        <img src="tazan.jpg" width="1500px" height="750px">
+        <section class="encuesta">
+            <h2>Queremos saber tu opinión</h2>
+            <form id="encuesta-form">
+                <label for="satisfaccion">¿Qué tan satisfecho estás con nuestros servicios?</label>
+                <select id="satisfaccion" name="satisfaccion">
+                    <option value="muy-satisfecho">Muy satisfecho</option>
+                    <option value="satisfecho">Satisfecho</option>
+                    <option value="neutral">Neutral</option>
+                    <option value="insatisfecho">Insatisfecho</option>
+                    <option value="muy-insatisfecho">Muy insatisfecho</option>
+                </select>
+                <label for="comentario">¿Tienes algún comentario o sugerencia para mejorar nuestros servicios?</label>
+                <textarea id="comentario" name="comentario" rows="5" cols="30"></textarea>
+                <button type="submit" class="btn-enviar">Enviar</button>
+            </form>
+            <div id="resultado"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; Florería</p>
+    </footer>
+
+    <script>
+        const form = document.getElementById('encuesta-form');
+        const resultado = document.getElementById('resultado');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const satisfaccion = document.getElementById('satisfaccion').value;
+            const comentario = document.getElementById('comentario').value;
+
+          
+            const datos = {
+                satisfaccion: satisfaccion,
+                comentario: comentario
+            };
+
+           
+            setTimeout(() => {
+                resultado.innerHTML = '¡Gracias por tu opinión!';
+                form.reset();
+            }, 2000);
+
+           
+             fetch('/enviar-encuesta', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json'
+                 },
+                 body: JSON.stringify(datos)
+             })
+             .then((response) => response.json())
+             .then((data) => {
+                 resultado.innerHTML = '¡Gracias por tu opinión!';
+                 form.reset();
+             })
+             .catch((error) => console.error(error));
+        });
+    </script>
+</body>
+</html>
