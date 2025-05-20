@@ -4,7 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Encuesta de Satisfacción</title>
-    <link rel="stylesheet" href="estilo.css">
+    <style>
+        .comentarios {
+            margin-top: 20px;
+        }
+
+        #lista-comentarios {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .comentario {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .comentario p {
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -29,6 +50,10 @@
             </form>
             <div id="resultado"></div>
         </section>
+        <section class="comentarios">
+            <h2>Comentarios</h2>
+            <div id="lista-comentarios"></div>
+        </section>
     </main>
     <footer>
         <p>&copy; Florería</p>
@@ -37,39 +62,34 @@
     <script>
         const form = document.getElementById('encuesta-form');
         const resultado = document.getElementById('resultado');
+        const listaComentarios = document.getElementById('lista-comentarios');
+        let comentarios = [];
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             const satisfaccion = document.getElementById('satisfaccion').value;
             const comentario = document.getElementById('comentario').value;
+            const datos = { satisfaccion: satisfaccion, comentario: comentario };
 
-          
-            const datos = {
-                satisfaccion: satisfaccion,
-                comentario: comentario
-            };
+            comentarios.push(datos);
+            mostrarComentarios();
 
-           
-            setTimeout(() => {
-                resultado.innerHTML = '¡Gracias por tu opinión!';
-                form.reset();
-            }, 2000);
-
-           
-             fetch('/enviar-encuesta', {
-                 method: 'POST',
-                 headers: {
-                     'Content-Type': 'application/json'
-                 },
-                 body: JSON.stringify(datos)
-             })
-             .then((response) => response.json())
-             .then((data) => {
-                 resultado.innerHTML = '¡Gracias por tu opinión!';
-                 form.reset();
-             })
-             .catch((error) => console.error(error));
+            resultado.innerHTML = '¡Gracias por tu opinión!';
+            form.reset();
         });
+
+        function mostrarComentarios() {
+            listaComentarios.innerHTML = '';
+            comentarios.forEach((comentario) => {
+                const comentarioHTML = `
+                    <div class="comentario">
+                        <p>${comentario.comentario}</p>
+                        <p>Satisfacción: ${comentario.satisfaccion}</p>
+                    </div>
+                `;
+                listaComentarios.innerHTML += comentarioHTML;
+            });
+        }
     </script>
 </body>
 </html>
